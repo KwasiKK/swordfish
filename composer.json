@@ -1,0 +1,21 @@
+{
+    "name": "kwasikk/swordfish",
+    "type": "project",
+    "description": "An extremely simple MVC PHP application for intergrating with GitHub repositories.",
+    "keywords": ["graphql", "php", "mvc", "api intergration", "application"],
+    "homepage": "https://github.com/KwasiKK/swordfish",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "KwasiKK",
+            "role": "Developer"
+        }
+    ],
+    "support": {
+        "issues": "https://github.com/KwasiKK/swordfish/issues",
+        "source": "https://github.com/KwasiKK/swordfish"
+    },
+    "require": {
+        "php": ">=5.3.0"
+    }
+}
