@@ -10,7 +10,7 @@ class Issues extends Controller
 
     function __construct() {
       $path = str_replace("application\controller", "", __DIR__).".env";
-
+      $path = str_replace("application/controller", "", $path);
       $envFile = fopen($path, "r") or die("Unable to open file!");
       $this->env = json_decode(fread($envFile,filesize($path)));
       fclose($envFile);
