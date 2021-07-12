@@ -1,5 +1,15 @@
 <div class="row">
     <div class="col-md-12">
+        <h3>Logged in as <?php echo $user->name; ?></h3>
+        <?php 
+            echo '<pre>';
+            print_r($user);
+            echo '</pre>';
+        ?>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
         <button type="button" class="btn btn-success"
             data-bs-toggle="modal" data-bs-target="#addIssueModal">Add Issue</button>
     </div>

@@ -20,73 +20,73 @@ class Issues extends Controller
      */
     public function get()
     {
-        $accessToken = $this->env->accessToken;
+      $accessToken = $_SESSION['access_token'] ? $_SESSION['access_token'] : $this->env->accessToken;
 
-        // First time using graphql, it is very cool
-        $endpoint = "https://api.github.com/graphql";
-        $page_size = $_GET["page_size"];
-        $cursor = isset($_GET["cursor"]) ? $_GET["cursor"] : null;
-        $owner = $this->env->owner;
-        $repo_name = $this->env->repoName;
-        $paging = $cursor == null ? "" : ", before: \"".$cursor."\"";
+      // First time using graphql, it is very cool
+      $endpoint = "https://api.github.com/graphql";
+      $page_size = $_GET["page_size"];
+      $cursor = isset($_GET["cursor"]) ? $_GET["cursor"] : null;
+      $owner = $this->env->owner;
+      $repo_name = $this->env->repoName;
+      $paging = $cursor == null ? "" : ", before: \"".$cursor."\"";
 
-        $query = "query {
-          repository(owner: \"".$owner."\", name: \"".$repo_name."\") {
-            issues(last: ".$page_size.$paging.") {
-              edges {
-                node {
-                  title
-                  labels(first: 20) {
-                    edges {
-                      node {
-                        name
-                        description
-                      }
+      $query = "query {
+        repository(owner: \"".$owner."\", name: \"".$repo_name."\") {
+          issues(last: ".$page_size.$paging.") {
+            edges {
+              node {
+                title
+                labels(first: 20) {
+                  edges {
+                    node {
+                      name
+                      description
                     }
                   }
-                  assignees(first: 10) {
-                    edges {
-                      node {
-                        name
-                      }
-                    }
-                  }
-                  body
-                  closed
                 }
-                cursor
+                assignees(first: 10) {
+                  edges {
+                    node {
+                      name
+                    }
+                  }
+                }
+                body
+                closed
               }
+              cursor
             }
           }
-        }";
-        $variables = '';
-        
-        $json = json_encode(['query' => $query, 'variables' => $variables]);
-
-        $ch = curl_init();
-
-        curl_setopt($ch, CURLOPT_URL, $endpoint);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-        curl_setopt($ch, CURLOPT_POST, 1);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, $json);
-        
-        $headers = array();
-        $headers[] = 'Authorization: bearer '.$accessToken;
-        $headers[] = 'Content-Type: application/x-www-form-urlencoded';
-        $headers[] = 'User-Agent: php';
-        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-        
-        $result = curl_exec($ch);
-        if (curl_errno($ch)) {
-            echo 'Error:' . curl_error($ch);
         }
-        curl_close($ch);
+      }";
+      $variables = '';
+      
+      $json = json_encode(['query' => $query, 'variables' => $variables]);
 
-        if ($result === FALSE) {
-          throw new Exception('Error fetching issues.');
-        }
+      $ch = curl_init();
 
-        echo $result;
+      curl_setopt($ch, CURLOPT_URL, $endpoint);
+      curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+      curl_setopt($ch, CURLOPT_POST, 1);
+      curl_setopt($ch, CURLOPT_POSTFIELDS, $json);
+      
+      $headers = array();
+      $headers[] = 'Authorization: bearer '.$accessToken;
+      $headers[] = 'Content-Type: application/x-www-form-urlencoded';
+      $headers[] = 'User-Agent: php';
+      curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+      
+      $result = curl_exec($ch);
+      if (curl_errno($ch)) {
+          echo 'Error:' . curl_error($ch);
+      }
+      curl_close($ch);
+
+      if ($result === FALSE) {
+        throw new Exception('Error fetching issues.');
+      }
+
+      echo $result;
     }
 
     /**
